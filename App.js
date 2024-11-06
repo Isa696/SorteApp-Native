@@ -1,20 +1,20 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { PaperProvider } from 'react-native-paper';
+import themes from './src/styles/themes';
+import { useState } from 'react';
+import RandomMixGenerator from './src/screens/RandomMixGenerator';
+import RandomName from './src/screens/RandomName';
+import RandomNumber from './src/screens/RandomNumber';
 
 export default function App() {
+  const [theme, setTheme] = useState(themes.dark);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+      <PaperProvider theme={theme}>
+        <StatusBar style="auto" />
+        {/* <RandomNumber /> */}
+        {/* <RandomName /> */}
+        <RandomMixGenerator />
+      </PaperProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
