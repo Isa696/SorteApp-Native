@@ -63,6 +63,37 @@ function handleFabPress () {
       setWinner("");
     };
 
+    function handleWinner(items, showModalWinner, setWinner) {
+      // Definimos las listas de posibles valores
+      const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+      const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+      const mixs = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+      
+      // Mapeamos cada item y decidimos el valor basado en su tipo
+      const newItems = items.map((item) => {
+        let availableOptions;
+    
+        // Dependiendo del valor de item.value, asignamos las opciones correspondientes
+        if (item.value === "0") {
+          availableOptions = numbers; // Seleccionamos de números
+        } else if (item.value === "A") {
+          availableOptions = letters; // Seleccionamos de letras
+        } else if (item.value === "0A") {
+          availableOptions = mixs; // Seleccionamos de la mezcla
+        }
+    
+        // Seleccionamos un valor aleatorio de las opciones disponibles
+        const randomIndex = Math.floor(Math.random() * availableOptions.length);
+        return availableOptions[randomIndex];
+      });
+    
+      // Asignamos el nuevo valor aleatorio al ganador
+      setWinner(newItems.join('')); // Podríamos unir los resultados en una cadena
+    
+      // Mostramos el modal del ganador
+      showModalWinner();
+    }
+
   return (
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
@@ -128,7 +159,7 @@ function handleFabPress () {
           },
         ]}
         icon="shuffle-variant"
-        onPress={() => showModalWinner()}
+        onPress={() => handleWinner(items, showModalWinner, setWinner)}
       >
         Sortear
       </Button>

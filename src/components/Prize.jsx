@@ -1,25 +1,50 @@
-import React, { useState } from "react";
-import { View, StyleSheet, Pressable } from "react-native";
+import React, { useRef, useState } from "react";
+import { View, StyleSheet, Pressable, Animated  } from "react-native";
 import {
   TextInput,
   useTheme,
   IconButton,
   Text,
-  Modal
+  Menu
 } from "react-native-paper";
 
 export default function Component({ prize, setPrize, onSelect }) {
   const emojis = ["🏆", "🥇", "🥈", "🥉", "🎉", "🎁", "🎮", "📺", "🖥️", "📱"];
   const theme = useTheme();
-  const [expanded, setExpanded] = useState(false);
   const [selectedItem, setSelectedItem] = useState("");
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [inputPosition, setInputPosition] = useState({ x: 0, y: 0 });
 
-  const handlePress = () => setExpanded(!expanded);
+  const fadeAnim = useRef(new Animated.Value(0)).current; // Valor de opacidad inicial
+
+  const openMenu = () => {
+    setMenuVisible(true);
+    // Inicia la animación de desvanecimiento
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const closeMenu = () => {
+    // Inicia la animación de desvanecimiento para ocultar el menú
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => setMenuVisible(false)); // Oculta el menú al finalizar la animación
+  };
 
   const handleSelect = (item) => {
     setSelectedItem(item);
-    setExpanded(false);
     onSelect(item);
+    closeMenu();
+  };
+
+  const onLayout = (event) => {
+    const { x, y, height } = event.nativeEvent.layout;
+    setInputPosition({ x: x - 40, y: y + height + 10 }); // Ajuste para mostrar justo debajo del TextInput
   };
 
   return (
@@ -35,6 +60,7 @@ export default function Component({ prize, setPrize, onSelect }) {
         activeUnderlineColor={theme.colors.accent}
         value={prize}
         onChangeText={setPrize}
+        onLayout={onLayout} // Captura la posición y altura del TextInput
         style={[
           stylesPrize.textInput,
           { backgroundColor: theme.colors.secondary, color: theme.colors.text },
@@ -49,8 +75,8 @@ export default function Component({ prize, setPrize, onSelect }) {
                 rippleColor={theme.colors.accent}
                 style={{ borderColor: theme.colors.accent }}
                 size={20}
-                icon={expanded ? "chevron-up" : "chevron-down"}
-                onPress={handlePress}
+                icon={menuVisible ? "chevron-up" : "chevron-down"}
+                onPress={() => (menuVisible ? closeMenu() : openMenu())}
               />
             )}
           />
@@ -71,25 +97,16 @@ export default function Component({ prize, setPrize, onSelect }) {
         }
       />
 
-        <Modal
-          visible={expanded}
-          onDismiss={handlePress}
-          // animationIn="slideInUp"
-          // animationOut="slideOutDown"
-          contentContainerStyle={[
-            stylesPrize.emojiList,
-            { backgroundColor: theme.colors.background },
-          ]}
-        >
+      {/* Menú posicionado debajo del TextInput */}
+      {menuVisible && (
+        <View style={[stylesPrize.menu, { top: inputPosition.y, left: inputPosition.x , backgroundColor: theme.colors.background}]}>
           {emojis.map((emoji, index) => (
-            <IconButton
-              key={index}
-              icon={() => <Text style={stylesPrize.emoji}>{emoji}</Text>}
-              onPress={() => handleSelect(emoji)}
-              style={stylesPrize.emojiButton}
-            />
+            <Pressable key={index} onPress={() => handleSelect(emoji)}>
+              <Text style={stylesPrize.emoji}>{emoji}</Text>
+            </Pressable>
           ))}
-        </Modal>
+        </View>
+      )}
     </View>
   );
 }
@@ -99,11 +116,9 @@ const stylesPrize = StyleSheet.create({
     width: "95%",
     maxWidth: 550,
     borderRadius: 10,
-    overflow: "auto",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    gap: 5,
   },
   textInput: {
     width: "100%",
@@ -111,29 +126,30 @@ const stylesPrize = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     borderRadius: 10,
-    display: "flex",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-  },
-  emojiList: {
-    marginHorizontal: "auto",
-    width: "90%",
-    maxWidth: 550,
-    overflow: "auto",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    alignItems: "center",
-    justifyContent: "space-around",
-    padding: 15,
-    gap: 10,
-    maxHeight: 300,
-    borderRadius: 10,
   },
   emojiButton: {
     margin: 5,
   },
   emoji: {
     fontSize: 20,
+  },
+  menu: {
+    position: "absolute",
+    padding: 10,
+    borderRadius: 8,
+    elevation: 5,
+    zIndex: 999,
+    maxHeight: 200,
+    width: "100%",
+    overflow: "auto",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+    justifyContent: "space-around",
+    padding: 15,
+    gap: 50,
   },
 });
