@@ -52,8 +52,9 @@ const RandomNumber = () => {
 
   return (
     <View
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-    >
+    style={[styles.container, { backgroundColor: theme.colors.background }]}>
+
+
             <Prize prize={prize} setPrize={setPrize} onSelect={handleIconSelect}/>
       <View
         style={[

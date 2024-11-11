@@ -96,9 +96,8 @@ function handleFabPress () {
 
   return (
     <View
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-    >
-      <Prize prize={prize} setPrize={setPrize} onSelect={handleIconSelect}/>
+    style={[styles.container, { backgroundColor: theme.colors.background }]}>
+<Prize prize={prize} setPrize={setPrize} onSelect={handleIconSelect}/>
       <View
         style={[
           stylesItems.BgContainer,
@@ -108,6 +107,7 @@ function handleFabPress () {
         {items.map((item, index) => (
           <View
             key={index}
+            elevation={2}
             style={[
               stylesItems.itemContainer,
               { backgroundColor: theme.colors.secondary },
@@ -140,9 +140,13 @@ function handleFabPress () {
 
         {fabVisible && (
           <FAB
-          color={theme.colors.text}
-          style={{ backgroundColor: theme.colors.secondary }}
+          mode="elevated"
+          elevation={2}
+          variant="secondary"
           icon="plus"
+          // label="+"
+          size={"medium"}
+          // style={{backgroundColor: theme.colors.secondary}}
           onPress={() => handleFabPress()}
           />
         )}
@@ -173,6 +177,7 @@ function handleFabPress () {
         textPrize={prize}
         iconPrize={selectedIcon}
       />
+
     </View>
   );
 };
@@ -203,17 +208,7 @@ const stylesItems = StyleSheet.create({
     alignItems: "center",
     borderRadius: 20,
     padding: 8,
-    shadowColor: "#000000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-    elevation: 4,
-    "&:hover": {
-      backgroundColor: "rgba(0, 0, 0, 0.1)",
-    },
+
   },
   modalContent: {
     padding: 20,
@@ -232,4 +227,7 @@ const stylesItems = StyleSheet.create({
     textAlign: "center",
     marginVertical: 4,
   },
+  fab: {
+    fontSize: 30,
+  }
 });

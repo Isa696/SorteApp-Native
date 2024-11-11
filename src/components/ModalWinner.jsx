@@ -1,34 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Modal, useTheme, Portal, Button, Text } from 'react-native-paper';
-import ConfettiCannon from 'react-native-confetti-cannon';
+import LottieView from 'lottie-react-native';
+import ViewShot from 'react-native-view-shot';
+import ShareButton from './ShareButton';
 
 const ModalWinner = ({ hideModal, error, visible, textWinner, stylesItems, textPrize, iconPrize }) => {
   const theme = useTheme();
-  
+  const viewRef = useRef();
+
+
   // Estado para la animación
   const [animatedText, setAnimatedText] = useState(Array(8).fill(''));
   const [isAnimationFinished, setIsAnimationFinished] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
-  const [parentWidth, setParentWidth] = useState(0);
-
-    // Captura el ancho del componente padre al montar el modal
-    const handleLayout = (event) => {
-      const width  = event.nativeEvent.layout;
-      setParentWidth(width);
-    };
+  let timeoutId; // Variable para almacenar el timeout actual
 
   useEffect(() => {
     if (textWinner) {
       const mixs = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
-      
       // Función de animación más eficiente con requestAnimationFrame
       let frameId;
       let startTime = null;
-      
+
       const updateText = (timestamp) => {
         if (!startTime) startTime = timestamp;
         const progress = timestamp - startTime;
-        
+
         if (progress < 1000) { // Animación por 1 segundo
           const randomChars = Array.from({ length: 8 }, () => mixs[Math.floor(Math.random() * mixs.length)]);
           setAnimatedText(randomChars);
@@ -36,37 +33,50 @@ const ModalWinner = ({ hideModal, error, visible, textWinner, stylesItems, textP
         } else {
           setIsAnimationFinished(true);  // Finaliza la animación después de 1 segundo
           setShowConfetti(true); // Activar confeti
+          timeoutId =   setTimeout(() => {setShowConfetti(false);}, 3000);
         }
       };
-
-      frameId = requestAnimationFrame(updateText);
-
-      return () => cancelAnimationFrame(frameId); // Limpiar animación si el modal se cierra antes
+            frameId = requestAnimationFrame(updateText);
+            return () => {
+        cancelAnimationFrame(frameId);
+        clearTimeout(timeoutId); // Limpia el timeout si el modal se cierra antes de terminar la animación
+        setIsAnimationFinished(false);
+        setShowConfetti(false);
+      };
     }
-
-    return () => {
-      setIsAnimationFinished(false);
-      setShowConfetti(false);
-    };
   }, [textWinner]);
 
+  function handleDismiss () {
+    hideModal();
+    clearTimeout(timeoutId); // Asegura que el timeout no continúe en la próxima apertura
+    setIsAnimationFinished(false);
+    setShowConfetti(false);
+  };
   return (
     <Portal>
       <Modal
         visible={visible}
-        onDismiss={hideModal}
-        onLayout={handleLayout}
+        onDismiss={handleDismiss}
         contentContainerStyle={[
           stylesItems.modalContent,
           stylesItems.shadow,
           { backgroundColor: theme.colors.background },
         ]}
       >
+          <ViewShot ref={viewRef}>
 
           {visible && (
             <>
               {error ? (
-                <Text style={[stylesItems.text, { color: "red" }]}>{error}</Text>
+                <>
+                  <Text style={[stylesItems.text, { color: theme.colors.onError }]}>{error}</Text>
+                  <Button
+                  mode="contained"
+                  onPress={handleDismiss}
+                  icon={"close"}
+                  style={[stylesItems.button, { backgroundColor: theme.colors.error }]}
+                  >Cerrar</Button>
+                </>
               ) : (
                 <>
                   <Text style={[stylesItems.text, { color: theme.colors.text }]}>
@@ -88,57 +98,55 @@ const ModalWinner = ({ hideModal, error, visible, textWinner, stylesItems, textP
                     </>
                   )}
 
-                  <Button
-                    mode="contained"
-                    icon="share"
-                    // onPress={console.log("Compartir")}
-                    style={stylesItems.button}
-                  >
-                    Compartir
-                  </Button>
-                  </>
-                )}
+                  <ShareButton viewRef={viewRef} stylesItems={stylesItems} isAnimationFinished={isAnimationFinished} textWinner={textWinner} textPrize={textPrize} iconPrize={iconPrize}/>
+
               <Button
                 mode="contained"
-                onPress={hideModal}
+                onPress={handleDismiss}
                 icon={"close"}
-                style={[stylesItems.button, { backgroundColor: "red" }]}
-                >
-                Cerrar
-              </Button>
+                disabled={!isAnimationFinished}
+                style={[stylesItems.button, { backgroundColor: theme.colors.error }]}
+                >Cerrar</Button>
+              </>
+            )}
             </>
           )}
-      </Modal>
           {showConfetti && (
-          <>
-            {/* Confeti desde la izquierda */}
-            <ConfettiCannon
-              count={100}
-              origin={{ x: 0, y: 0 }} // Confeti desde la izquierda
-              fallSpeed={750}
-              explosionSpeed={500}
-              fadeOut={true}
-              style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-              }}
+            <>
+            <LottieView
+            source={require("../../assets/confetti.json")}
+            key="confetti"
+            autoPlay
+            loop={false}
+            resizeMode='cover'
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              right: 0,
+              left: 0,
+              top: 0,
+              zIndex: 1000,
+            }}
             />
-            {/* Confeti desde la derecha */}
-            <ConfettiCannon
-              count={100}
-              origin={{ x: parentWidth, y: 0 }} // Confeti desde la derecha
-              fallSpeed={750}
-              explosionSpeed={500}
-              fadeOut={true}
-              style={{
-                position: 'absolute',
-                bottom: 0,
-                right: 0,
-              }}
+            <LottieView
+            source={require("../../assets/confetti-bottom.json")}
+            key="confetti-bottom"
+            autoPlay
+            loop={false}
+            resizeMode='cover'
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              right: 0,
+              left: 0,
+              top: 0,
+              zIndex: 1000,
+            }}
             />
-          </>
-        )}
+            </>
+          )}
+          </ViewShot>
+          </Modal>
     </Portal>
   );
 };

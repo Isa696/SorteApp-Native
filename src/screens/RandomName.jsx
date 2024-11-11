@@ -75,9 +75,6 @@ const RandomName = () => {
     };
 
     function handleWinner( names, showModalWinner, setWinner, setError, setCurrentIndex) {
-      if (names.length === 0) {
-        return setError("No hay nombres para ganar");
-      }
       const randomIndex = Math.floor(Math.random() * names.length);
       const randomName = names[randomIndex].newName;
       setWinner(randomName);
@@ -91,11 +88,8 @@ const RandomName = () => {
 
   return (
     <View
-      style={[
-        styles.container,
-        { backgroundColor: theme.colors.background, },
-      ]}
-    >
+    style={[styles.container, { backgroundColor: theme.colors.background }]}>
+
       <Prize prize={prize} setPrize={setPrize} onSelect={handleIconSelect}/>
       <View
         style={[
@@ -188,13 +182,14 @@ const RandomName = () => {
       <Button
         textColor={theme.colors.text}
         mode="elevated"
-        disabled={names.length === 0}
+        disabled={names.length < 2}
         style={[stylesItems.button,
           { backgroundColor: theme.colors.secondary},]}
         icon="shuffle-variant"
         onPress={() =>  handleWinner( names, showModalWinner, setWinner, setError, setCurrentIndex)}
       >Sortear</Button>
-    </View>
+
+        </View>
   );
 };
 

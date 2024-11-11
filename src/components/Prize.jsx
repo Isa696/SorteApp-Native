@@ -4,8 +4,7 @@ import {
   TextInput,
   useTheme,
   IconButton,
-  Text,
-  Menu
+  Text
 } from "react-native-paper";
 
 export default function Component({ prize, setPrize, onSelect }) {
@@ -73,7 +72,6 @@ export default function Component({ prize, setPrize, onSelect }) {
                 mode="outlined"
                 iconColor={theme.colors.text}
                 rippleColor={theme.colors.accent}
-                style={{ borderColor: theme.colors.accent }}
                 size={20}
                 icon={menuVisible ? "chevron-up" : "chevron-down"}
                 onPress={() => (menuVisible ? closeMenu() : openMenu())}

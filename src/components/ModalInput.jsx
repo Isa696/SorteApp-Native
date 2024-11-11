@@ -33,7 +33,7 @@ const ModalInput = ({hideModal, error, visible, handleBtn, btnText, newName, set
         ]}
       />
       {error && (
-        <Text style={[stylesItems.text, { color: "red" }]}>{error}</Text>
+        <Text style={[stylesItems.text, { color: theme.colors.onError }]}>{error}</Text>
       )}
       <Button mode="contained" onPress={handleBtn} style={stylesItems.button}
       icon={iconBtn}
@@ -43,7 +43,7 @@ const ModalInput = ({hideModal, error, visible, handleBtn, btnText, newName, set
       <Button
         mode="contained"
         onPress={hideModal}
-        style={[stylesItems.button, { backgroundColor: "red" }]}
+        style={[stylesItems.button, { backgroundColor: theme.colors.error }]}
         icon={"close"}
       >
         Cerrar
