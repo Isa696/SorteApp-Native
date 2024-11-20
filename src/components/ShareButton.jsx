@@ -3,7 +3,7 @@ import { captureRef } from "react-native-view-shot";
 import * as Sharing from "expo-sharing";
 import { Button, Text, useTheme } from "react-native-paper";
 
-const ShareButton = ( { isAnimationFinished, stylesItems, viewRef, textWinner, textPrize, iconPrize }) => {
+const ShareButton = ( { isAnimationFinished, stylesItems, viewRef}) => {
   const theme = useTheme();
   const [error, setError] = useState(false)
 

@@ -1,12 +1,11 @@
 import './gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import { PaperProvider } from 'react-native-paper';
+import { Provider as PaperProvider } from 'react-native-paper';
 import themes from './src/styles/themes';
 import { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import DrawerScreen from './src/navigation/DrawerScreen';
-import ScreenShot from './src/components/ShareButton';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function App() {
 
@@ -15,8 +14,11 @@ export default function App() {
   return (
       <PaperProvider theme={theme}>
         <NavigationContainer>
-            <StatusBar style="auto" />
+          <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.background}}>
+            <StatusBar backgroundColor={theme.colors.background}
+            style={theme.dark ? 'light' : 'dark'}  />
               <DrawerScreen theme={theme} setTheme={setTheme}/>
+            </SafeAreaView>
         </NavigationContainer>
       </PaperProvider>
   );

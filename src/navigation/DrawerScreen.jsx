@@ -1,13 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import RandomName from "../screens/RandomName";
 import RandomNumber from "../screens/RandomNumber";
 import RandomMixGenerator from "../screens/RandomMixGenerator";
 import CustomDrawerContent from "../components/CustomDrawerContent";
+import RecordSwitch from "../components/RecordSwitch";
+import iconLogo from "../../assets/icon.png";
+import { Image } from "react-native";
 
 const RNDrawer = createDrawerNavigator();
 
 const DrawerScreen = ({ theme, setTheme }) => {
+
+  const [isRecording, setIsRecording] = useState(false);
+  const [videoUri, setVideoUri] = useState(null);
+  const [visible, setVisible] = useState(false);
+  const [error , setError] = useState(null);
 
   return (
     <RNDrawer.Navigator
@@ -19,11 +27,18 @@ const DrawerScreen = ({ theme, setTheme }) => {
         headerStyle: {
           backgroundColor: theme.colors.primary,
         },
-        headerTitle: "SorteApp",
+        headerTitle: () => (
+          <Image
+            source={iconLogo}
+            style={{ width: 100, height: 100, resizeMode: 'contain' }}
+          />
+        ),
+        headerTitleAlign: 'center',
         headerTintColor: theme.colors.onPrimary,
-        headerTitleStyle: {
-          fontWeight: "bold",
-        },
+        headerRight: () => (
+          <RecordSwitch theme={theme} isRecording={isRecording} setIsRecording={setIsRecording} videoUri={videoUri} setVideoUri={setVideoUri}
+            visible={visible} setVisible={setVisible} error={error} setError={setError} />
+        ),
       }}
       drawerContent={(props) => <CustomDrawerContent {...props} theme={theme} setTheme={setTheme} />}
     >

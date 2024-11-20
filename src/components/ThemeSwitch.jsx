@@ -17,7 +17,7 @@ const ThemeSwitch = ({ theme, setTheme }) => {
         width: 60,
         height: 30,
         borderRadius: 15,
-        backgroundColor: isDarkTheme ? theme.colors.primary : theme.colors.surfaceDisabled,
+        backgroundColor: isDarkTheme ? theme.colors.surfaceDisabled : theme.colors.primary,
         padding: 5,
       }}
     >
@@ -31,7 +31,7 @@ const ThemeSwitch = ({ theme, setTheme }) => {
         }}
       >
         <IconButton
-          icon={isDarkTheme ? "moon-waning-crescent" : "white-balance-sunny"}
+          icon={isDarkTheme ? "weather-night" : "weather-sunny"}
           iconColor={theme.colors.text}
           size={20}
           style={{ margin: 0 }}

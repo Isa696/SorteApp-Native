@@ -98,7 +98,7 @@ const ModalWinner = ({ hideModal, error, visible, textWinner, stylesItems, textP
                     </>
                   )}
 
-                  <ShareButton viewRef={viewRef} stylesItems={stylesItems} isAnimationFinished={isAnimationFinished} textWinner={textWinner} textPrize={textPrize} iconPrize={iconPrize}/>
+                  <ShareButton viewRef={viewRef} stylesItems={stylesItems} isAnimationFinished={isAnimationFinished}/>
 
               <Button
                 mode="contained"

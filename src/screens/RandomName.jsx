@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, FlatList, Pressable } from "react-native";
 import { styles } from "../styles/container";
 import {
@@ -22,14 +22,17 @@ const RandomName = () => {
   const [newName, setNewName] = useState("");
   const [currentIndex, setCurrentIndex] = useState(null);
   const [winner , setWinner] = useState(null);
+  const [winnerIndex, setWinnerIndex] = useState(null);
   const [prize, setPrize] = useState('');
   const [selectedIcon, setSelectedIcon] = useState('');
+  const [multiple, setMultiple] = useState(false);
 
   const showModalNames = () => setVisible(true);
   const hideModalNames = () => {
     setVisible(false);
     setNewName("");
     setError("");
+    setMultiple(false);
   };
 
   const showModalchange = (index) => {
@@ -44,26 +47,65 @@ const RandomName = () => {
   };
 
   const showModalWinner = () => setVisibleWinner(true);
-  const hideModalWinner = (currentIndex) => {
+  const hideModalWinner = () => {
     setVisibleWinner(false);
     setNewName("");
     setError("");
-    setWinner("");
-    deleteName(currentIndex);
+    setWinner(null);
+    setWinnerIndex(null);
   };
 
-  const addName = () => {
+// Función para agregar un solo nombre o múltiples nombres basados en el modo `multiline`
+const addName = () => {
+  if (newName.trim() === "") {
+    setError("Por favor ingrese un nombre");
+    return;
+  }
 
-    if (newName.trim() === "") {
-      setError("Por favor ingrese un nombre");
-    } else if (names.includes(newName.trim())) {
+  if (multiple) {
+    // Si está en modo multilínea, llama a `addMultipleNames`
+    addMultipleNames(newName);
+  } else {
+    // Modo de una sola línea
+    if (names.some((name) => name.newName === newName.trim())) {
       setError("El nombre ya existe");
     } else {
+      const updatedNames = [...names, { newName: newName.trim() }];
+      setNames(updatedNames);
+      console.log("Nombre único añadido:", updatedNames);
       setError("");
-        setNames([...names, {newName: newName.trim()}]);
+    }
+  }
+
+  setNewName("");
+};
+
+// Función para agregar múltiples nombres en caso de que `multiline` esté activado
+const addMultipleNames = (inputText) => {
+  const newNamesArray = inputText
+    .split("\n")
+    .map((name) => name.trim())
+    .filter((name) => name !== "" && !names.some((n) => n.newName === name))
+    .map((name) => {
+      if (name.length > 20) {
+        return name.slice(0, 20); // Trunca el nombre a 20 caracteres
       }
-      setNewName("");
-    };
+      return name;
+    });
+
+  if (newNamesArray.length === 0) {
+    setError("Los nombres ya existen o están vacíos");
+  } else {
+    const updatedNames = [...names, ...newNamesArray.map((name) => ({ newName: name }))];
+    setNames(updatedNames);
+    console.log("Nombres añadidos:", updatedNames);
+    setError("");
+  }
+};
+
+useEffect(() => {
+  console.log("names actualizado:", names);
+}, [names]);
 
   const deleteName = (index) => {
     setNames(names.filter((_, i) => i !== index));
@@ -71,19 +113,28 @@ const RandomName = () => {
 
     const changeName = (index) => {
       setNames(names.map((name, i) => (i === index ? { ...name, newName: newName.trim() } : name)));
-      hideModalchange();
+      (newName.trim() === "") ? setError("Por favor ingrese un nombre") : setError("");
     };
 
-    function handleWinner( names, showModalWinner, setWinner, setError, setCurrentIndex) {
+    function handleWinner( names, showModalWinner, setWinner, setError) {
+      setError("");
+      if (names.length === 0) {
+        setError("Hubo un error, intenta de nuevo");
+        return;
+      }
       const randomIndex = Math.floor(Math.random() * names.length);
-      const randomName = names[randomIndex].newName;
-      setWinner(randomName);
-      setCurrentIndex(randomIndex);
+      const randomName = names[randomIndex]?.newName;
+      setWinner(randomName || "Sin ganador");
+      setWinnerIndex(randomIndex);
       showModalWinner();
     };
 
     function handleIconSelect (icon) {
       setSelectedIcon(icon);
+      };
+
+      function handleMultipleNames () {
+        multiple ? setMultiple(false) : setMultiple(true);
       };
 
   return (
@@ -102,9 +153,9 @@ const RandomName = () => {
             textColor={theme.colors.text}
             mode="elevated"
             style={[{ backgroundColor: theme.colors.secondary, }, stylesItems.button,]}
-            icon="plus"
+            icon="account-plus-outline"
             onPress={showModalNames}
-          >Agregar Nombres</Button>
+          > Agregar Nombres</Button>
         <View
           style={[
             stylesItems.itemContainer,
@@ -124,14 +175,23 @@ const RandomName = () => {
                   iconColor={theme.colors.text}
                   rippleColor={theme.colors.accent}
                   style={{borderColor: theme.colors.accent}}
-                  icon="delete"
+                  icon="pencil-outline"
                   size={20}
-                  onPress={() => deleteName(index)}
+                  onPress={() => {showModalchange(index)}}
                 />
                   <Pressable
                     onPress={() => {showModalchange(index)}}>
                     <Text style={[stylesItems.text, { color: theme.colors.text }]}>{`${index + 1}° ${item.newName}`}</Text>
                   </Pressable>
+                <IconButton
+                  mode="outlined"
+                  iconColor={theme.colors.text}
+                  rippleColor={theme.colors.accent}
+                  style={{borderColor: theme.colors.accent}}
+                  icon="delete"
+                  size={20}
+                  onPress={() => deleteName(index)}
+                />
                   </View>
                   <Divider
                   color={theme.colors.accent}
@@ -154,6 +214,9 @@ const RandomName = () => {
       error={error}
       stylesItems={stylesItems}
       labelInput="Cambiar nombre"
+      allowMultiple={false}
+      multiline={false}
+      handleMultipleNames={handleMultipleNames}
       />
       {/* MODAL Agregar nombres */}
       <ModalInput
@@ -161,12 +224,15 @@ const RandomName = () => {
         visible={visible}
         handleBtn={addName}
         btnText={"Agregar"}
-        iconBtn={"plus"}
+        iconBtn={"account-plus"}
         newName={newName}
         setNewName={setNewName}
         error={error}
         stylesItems={stylesItems}
         labelInput="Agregar nombre"
+        allowMultiple={true}
+        multiline={multiple}
+        handleMultipleNames={handleMultipleNames}
       />
 
       <ModalWinner
@@ -215,7 +281,7 @@ const stylesItems = StyleSheet.create({
   namesContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     gap: 5,
   },
   itemContainer: {
