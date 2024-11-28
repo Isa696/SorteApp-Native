@@ -2,14 +2,36 @@ import './gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import { Provider as PaperProvider } from 'react-native-paper';
 import themes from './src/styles/themes';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import DrawerScreen from './src/navigation/DrawerScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as SplashScreen from 'expo-splash-screen';
+import Splash from './src/components/SplashScreen';
+
+
 
 export default function App() {
 
   const [theme, setTheme] = useState(themes.dark);
+  const [isAppReady, setIsAppReady] = useState(false);
+
+  useEffect(() => {
+    const prepare = async () => {
+      await SplashScreen.preventAutoHideAsync();
+
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      setIsAppReady(true);
+      SplashScreen.hideAsync();
+    };
+
+    prepare();
+  }, []);
+
+  if (!isAppReady) {
+    return <Splash />;
+  }
 
   return (
       <PaperProvider theme={theme}>

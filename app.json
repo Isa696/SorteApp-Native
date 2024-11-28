@@ -1,7 +1,4 @@
 {
-  "name": "SorteApp",
-  "displayName": "SorteApp",
-  "expo": {
     "name": "SorteApp",
     "slug": "SorteApp",
     "version": "1.0.0",
@@ -31,4 +28,3 @@
       }
     }
   }
-}
