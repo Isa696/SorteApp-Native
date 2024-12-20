@@ -11,6 +11,8 @@ import {
 import ModalWinner from "../components/ModalWinner";
 import ModalInput from "../components/ModalInput";
 import Prize from "../components/Prize";
+import CustomBannerAd from "../components/CustomBannerAd";
+
 
 const RandomName = () => {
   const theme = useTheme();
@@ -200,6 +202,7 @@ useEffect(() => {
             )}
           />
         </View>
+
       </View>
 
       {/* MODAL Modificar nombres */}
@@ -255,7 +258,8 @@ useEffect(() => {
         onPress={() =>  handleWinner( names, showModalWinner, setWinner, setError, setCurrentIndex)}
       >Sortear</Button>
 
-        </View>
+          <CustomBannerAd />
+      </View>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { styles } from "../styles/container";
 import {
@@ -9,6 +9,7 @@ import {
 } from "react-native-paper";
 import ModalWinner from "../components/ModalWinner";
 import Prize from "../components/Prize";
+import CustomBannerAd from "../components/CustomBannerAd";
 
 const RandomNumber = () => {
   const theme = useTheme();
@@ -132,6 +133,9 @@ const RandomNumber = () => {
         textPrize={prize}
         iconPrize={selectedIcon}
       />
+
+        <CustomBannerAd />
+
     </View>
   );
 };

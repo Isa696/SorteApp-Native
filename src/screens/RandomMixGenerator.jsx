@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState  } from "react";
 import { View, StyleSheet } from "react-native";
 import { styles } from "../styles/container";
 import { FAB, useTheme, Text, IconButton, Button } from "react-native-paper";
 import ModalWinner from "../components/ModalWinner";
 import Prize from "../components/Prize";
+import CustomBannerAd from "../components/CustomBannerAd";
 
 const RandomMixGenerator = () => {
   const theme = useTheme();
@@ -177,7 +178,7 @@ function handleFabPress () {
         textPrize={prize}
         iconPrize={selectedIcon}
       />
-
+      <CustomBannerAd />
     </View>
   );
 };

@@ -2,11 +2,12 @@ import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
     container: {
-      flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
       paddingTop: 20,
       gap: 20,
+      overflow: 'auto',
+      height: '100%',
     },
     shadow: {
       shadowOffset: {

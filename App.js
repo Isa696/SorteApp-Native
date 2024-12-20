@@ -8,8 +8,7 @@ import DrawerScreen from './src/navigation/DrawerScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen';
 import Splash from './src/components/SplashScreen';
-
-
+import mobileAds  from 'react-native-google-mobile-ads';
 
 export default function App() {
 
@@ -27,12 +26,21 @@ export default function App() {
     };
 
     prepare();
-  }, []);
 
+    mobileAds()
+    .initialize()
+    .then(adapterStatuses => {
+      console.log('Google Mobile Ads SDK inicializado', adapterStatuses);
+    })
+    .catch(error => {
+      console.error('Error inicializando Google Mobile Ads SDK', error);
+    });
+  }, []);
+  
   if (!isAppReady) {
     return <Splash />;
   }
-
+  
   return (
       <PaperProvider theme={theme}>
         <NavigationContainer>
