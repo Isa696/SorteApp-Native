@@ -50,12 +50,11 @@ const RecordSwitch = ({ theme, isRecording, setIsRecording, videoUri, setVideoUr
                 await RNScreenCapture.startRecording();
                 setIsRecording(true);
                 setVisible(true);
-                console.log('Recording started...');
             } catch (error) {
                 setError('Error al iniciar la grabación: ', error);
             }
         } else {
-            setError('Permisos no obtenidos.');
+            setError('Hubo un Error, intenta de nuevo.');
         }
         setTimeout(() => {
             setError(null);

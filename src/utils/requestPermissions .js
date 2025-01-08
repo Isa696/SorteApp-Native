@@ -1,4 +1,4 @@
-import { PermissionsAndroid } from 'react-native';
+import { PermissionsAndroid, Platform } from 'react-native';
 
 export const requestPermissions = async () => {
   try {
@@ -13,19 +13,53 @@ export const requestPermissions = async () => {
       }
     );
 
-    // Solicitar permisos de almacenamiento
-    const storagePermission = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-      {
-        title: "Permiso de almacenamiento",
-        message: "La aplicación necesita acceso al almacenamiento para guardar el video grabado.",
-        buttonNegative: "Cancelar",
-        buttonPositive: "Aceptar",
-      }
-    );
+    let manageStoragePermission = PermissionsAndroid.RESULTS.DENIED;
+    let readStoragePermission = PermissionsAndroid.RESULTS.DENIED;
+    let writeStoragePermission = PermissionsAndroid.RESULTS.DENIED;
 
-    // Verificar si ambos permisos fueron otorgados
-    if (audioPermission === PermissionsAndroid.RESULTS.GRANTED && storagePermission === PermissionsAndroid.RESULTS.GRANTED) {
+    // Solicitar permisos de gestión de almacenamiento solo en Android 11 o superior
+    if (Platform.Version >= 30) {
+      manageStoragePermission = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.MANAGE_EXTERNAL_STORAGE,
+        {
+          title: "Permiso de gestión de almacenamiento",
+          message: "La aplicación necesita acceso al almacenamiento para gestionar archivos.",
+          buttonNegative: "Cancelar",
+          buttonPositive: "Aceptar",
+        }
+      );
+    }
+
+    // Si el permiso de gestión de almacenamiento no se concede, solicitar permisos de lectura y escritura de almacenamiento
+    if (manageStoragePermission !== PermissionsAndroid.RESULTS.GRANTED) {
+      readStoragePermission = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        {
+          title: "Permiso de lectura de almacenamiento",
+          message: "La aplicación necesita acceso al almacenamiento para leer archivos.",
+          buttonNegative: "Cancelar",
+          buttonPositive: "Aceptar",
+        }
+      );
+
+      writeStoragePermission = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: "Permiso de escritura de almacenamiento",
+          message: "La aplicación necesita acceso al almacenamiento para guardar archivos.",
+          buttonNegative: "Cancelar",
+          buttonPositive: "Aceptar",
+        }
+      );
+    }
+
+    // Verificar si todos los permisos fueron otorgados
+    if (
+      audioPermission === PermissionsAndroid.RESULTS.GRANTED &&
+      (manageStoragePermission === PermissionsAndroid.RESULTS.GRANTED ||
+        (readStoragePermission === PermissionsAndroid.RESULTS.GRANTED &&
+         writeStoragePermission === PermissionsAndroid.RESULTS.GRANTED))
+    ) {
       console.log("Permisos otorgados");
       return true;
     } else {
