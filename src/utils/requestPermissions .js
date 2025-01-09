@@ -28,10 +28,8 @@ export const requestPermissions = async () => {
           buttonPositive: "Aceptar",
         }
       );
-    }
-
-    // Si el permiso de gestión de almacenamiento no se concede, solicitar permisos de lectura y escritura de almacenamiento
-    if (manageStoragePermission !== PermissionsAndroid.RESULTS.GRANTED) {
+    } else {
+    // Si no es Android 11, solicitar permisos de lectura y escritura de almacenamiento
       readStoragePermission = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
         {
