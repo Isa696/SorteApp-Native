@@ -7,6 +7,7 @@ import CustomDrawerContent from "../components/CustomDrawerContent";
 import RecordSwitch from "../components/RecordSwitch";
 import iconLogo from "../../assets/icon.png";
 import { Image } from "react-native";
+import History from "../screens/History";
 
 const RNDrawer = createDrawerNavigator();
 
@@ -45,6 +46,7 @@ const DrawerScreen = ({ theme, setTheme }) => {
       <RNDrawer.Screen name="Names" component={RandomName} />
       <RNDrawer.Screen name="Numbers" component={RandomNumber} />
       <RNDrawer.Screen name="Mixs" component={RandomMixGenerator} />
+      <RNDrawer.Screen name="History" component={History} />
     </RNDrawer.Navigator>
   );
 };

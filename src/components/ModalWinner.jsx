@@ -3,6 +3,8 @@ import { Modal, useTheme, Portal, Button, Text } from 'react-native-paper';
 import LottieView from 'lottie-react-native';
 import ViewShot from 'react-native-view-shot';
 import ShareButton from './ShareButton';
+import saveWinnerData from '../utils/saveWinnerData';
+import { styles } from '../styles/container';
 
 const ModalWinner = ({ hideModal, error, visible, textWinner, stylesItems, textPrize, iconPrize }) => {
   const theme = useTheme();
@@ -42,6 +44,7 @@ const ModalWinner = ({ hideModal, error, visible, textWinner, stylesItems, textP
         clearTimeout(timeoutId); // Limpia el timeout si el modal se cierra antes de terminar la animación
         setIsAnimationFinished(false);
         setShowConfetti(false);
+        saveWinnerData(textWinner, textPrize, iconPrize); // Guardar el ganador en el historial
       };
     }
   }, [textWinner]);
@@ -59,7 +62,7 @@ const ModalWinner = ({ hideModal, error, visible, textWinner, stylesItems, textP
         onDismiss={handleDismiss}
         contentContainerStyle={[
           stylesItems.modalContent,
-          stylesItems.shadow,
+          styles.shadow,
           { backgroundColor: theme.colors.background },
         ]}
       >

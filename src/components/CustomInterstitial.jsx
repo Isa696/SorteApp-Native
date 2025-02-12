@@ -1,6 +1,6 @@
 import { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import { Platform, StatusBar } from 'react-native';
-import { InterstitialAd, AdEventType } from 'react-native-google-mobile-ads';
+import { InterstitialAd, AdEventType, TestIds } from 'react-native-google-mobile-ads';
 
 // Usar Test ID en desarrollo y el bloque real en producción
 const adUnitId = 'ca-app-pub-5549683451413930/2905176618';

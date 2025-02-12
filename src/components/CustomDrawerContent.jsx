@@ -12,6 +12,7 @@ const CustomDrawerContent = (props) => {
   const [iconNames, setIconNames] = useState("ticket-account");
   const [iconNumbers, setIconNumbers] = useState("dice-multiple-outline");
   const [iconMixs, setIconMixs] = useState("slot-machine-outline");
+  const [iconHistory, setIconHistory] = useState("clock-outline");
 
   const adRef = useRef(null);
   // Función para actualizar el icono según la ruta activa
@@ -23,17 +24,26 @@ const CustomDrawerContent = (props) => {
         setIconNames("ticket-account");
         setIconNumbers("dice-multiple-outline");
         setIconMixs("slot-machine-outline");
+        setIconHistory("clock-outline");
         break;
       case "Numbers":
         setIconNames("ticket-outline");
         setIconNumbers("dice-multiple");
         setIconMixs("slot-machine-outline");
+        setIconHistory("clock-outline");
         break;
       case "Mixs":
         setIconNames("ticket-outline");
         setIconNumbers("dice-multiple-outline");
         setIconMixs("slot-machine");
+        setIconHistory("clock-outline");
         break;
+        case "History":
+            setIconNames("ticket-outline");
+            setIconNumbers("dice-multiple-outline");
+            setIconMixs("slot-machine-outline");
+            setIconHistory("clock");
+            break;
       default:
         break;
     }
@@ -105,26 +115,23 @@ const CustomDrawerContent = (props) => {
             adRef.current?.showAd();
           }}
           active={activeRouteName === "Mixs"}
-        />
-      </Drawer.Section>
-      {/* <Drawer.Section
-                            title="SorteApp"
-                            titleMaxFontSizeMultiplier={2.5}
-                            style={{ fontSize: 20, marginBottom: 10, width: "100%" }}
-                        >
+          />
                             <Drawer.Item
                                 style={{
                                     backgroundColor: theme.colors.background,
                                     marginBottom: 10,
                                     width: "90%",
                                 }}
-                                label="Acerca de:"
-                                icon="information-outline"
-                                onPress={() => navigation.navigate("About")}
-                                active={activeRouteName === "About"}
+                                label="Historial"
+                                icon={iconHistory}
+                                onPress={() => {
+                                  handleIconSelect("History");
+                                  navigation.navigate("History");
+                                  adRef.current?.showAd();
+                                }}
+                              active={activeRouteName === "History"}
                             />
-                        </Drawer.Section> */}
-
+                        </Drawer.Section>
         <CustomBannerAd />
         <CustomBannerAd />
         <CustomBannerAd />
