@@ -26,7 +26,7 @@ const History = () => {
           loadData();
         }, [])
       );
-    
+
     function showModalConfirm() {
         setVisibleConfirm(true);
     }
@@ -100,9 +100,6 @@ const History = () => {
         hideModal={hideModal}
         stylesCards={stylesCards}
         onDelete={loadData}
-        showModalConfirm={showModalConfirm}
-        visibleConfirm={visibleConfirm}
-        hideModalConfirm={hideModalConfirm}
         />
 
         <ModalConfirm

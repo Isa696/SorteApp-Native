@@ -16,8 +16,8 @@ const RandomMixGenerator = () => {
   const [iconDisabled, setIconDisabled] = useState(false);
 
   const [items, setItems] = useState([
-    { value: "0" },
-    { value: "0" },
+    { value: "0A" },
+    { value: "0A" },
   ]);
 
   const changeItem = (index) => {
@@ -48,9 +48,9 @@ const RandomMixGenerator = () => {
 function handleFabPress () {
     setIconDisabled(false);
     if (items.length < 3) {
-    setItems((prevItems) => [...prevItems, { value: "0" }]);
+    setItems((prevItems) => [...prevItems, { value: "0A" }]);
   } else if (items.length === 3) {
-    setItems((prevItems) => [...prevItems, { value: "0" }]);
+    setItems((prevItems) => [...prevItems, { value: "0A" }]);
     setFabVisible(false);
   }
 }
@@ -145,9 +145,7 @@ function handleFabPress () {
           elevation={2}
           variant="secondary"
           icon="plus"
-          // label="+"
           size={"medium"}
-          // style={{backgroundColor: theme.colors.secondary}}
           onPress={() => handleFabPress()}
           />
         )}

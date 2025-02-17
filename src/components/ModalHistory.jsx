@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import ViewShot from 'react-native-view-shot';
 import { Title , Paragraph, Modal, Button, useTheme, Portal} from 'react-native-paper';
 import ShareButton from './ShareButton';
@@ -8,15 +8,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ModalConfirm from './ModalConfirm';
 
 
-const ModalHistory = ({item, visible, hideModal, stylesCards, onDelete, showModalConfirm, visibleConfirm, hideModalConfirm}) => {
+const ModalHistory = ({item, visible, hideModal, stylesCards, onDelete}) => {
+  const theme = useTheme();
+  const viewRef = useRef();
+
+  const [isConfirmVisible, setIsConfirmVisible] = useState(false);
+
+  const showConfirm = () => setIsConfirmVisible(true);
+  const hideConfirm = () => setIsConfirmVisible(false);
+
   if (!item) return null;
-
-    const theme = useTheme();
-    const viewRef = useRef();
-
-    function handleDismiss () {
-        hideModal();
-      };
 
       const handleDelete = async () => {
         try {
@@ -32,20 +33,20 @@ const ModalHistory = ({item, visible, hideModal, stylesCards, onDelete, showModa
             );
             // Save filtered history
             await AsyncStorage.setItem('winnerHistory', JSON.stringify(newHistory));
-            onDelete();
+            await onDelete();
+            hideConfirm();
+            hideModal();
           }
         } catch (error) {
           console.error('Error deleting item:', error);
         }
-        hideModal();
-        hideModalConfirm();
       };
 
   return (
     <Portal>
               <Modal
         visible={visible}
-        onDismiss={handleDismiss}
+        onDismiss={hideModal}
         contentContainerStyle={[
           stylesItems.modalContent,
           styles.shadow,
@@ -71,13 +72,13 @@ const ModalHistory = ({item, visible, hideModal, stylesCards, onDelete, showModa
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <Button
                   mode="contained"
-                  onPress={showModalConfirm}
+                  onPress={showConfirm}
                   icon={"trash-can-outline"}
                   style={[stylesItems.button, { backgroundColor: theme.colors.onError }]}
                   >Eliminar</Button>
         <Button
                 mode="contained"
-                onPress={showModalConfirm}
+                onPress={hideModal}
                 icon={"close"}
                 style={[stylesItems.button, { backgroundColor: theme.colors.error }]}
                 >Cerrar</Button>
@@ -86,8 +87,8 @@ const ModalHistory = ({item, visible, hideModal, stylesCards, onDelete, showModa
       </Modal>
 
       <ModalConfirm
-            visible={visibleConfirm}
-            hideModalConfirm={hideModalConfirm}
+            visible={isConfirmVisible}
+            hideModalConfirm={hideConfirm}
             onConfirm={handleDelete}
             />
     </Portal>
