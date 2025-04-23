@@ -3,7 +3,7 @@ import { Platform, StatusBar } from 'react-native';
 import { InterstitialAd, AdEventType } from 'react-native-google-mobile-ads';
 
 // Usar Test ID en desarrollo y el bloque real en producción
-const adUnitId = 'ca-app-pub-5549683451413930/2905176618';
+const adUnitId = import.meta.env.VITE_GOOGLE_ADS_INTERSTITIAL_ID;
 
 // Crear un anuncio intersticial
 const interstitial = InterstitialAd.createForAdRequest(adUnitId);
