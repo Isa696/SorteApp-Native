@@ -1,0 +1,73 @@
+# SorteApp 🎲
+
+Una aplicación móvil desarrollada en React Native para gestionar sorteos y premios. Selecciona ganadores fácilmente y mantén un registro histórico de tus sorteos.
+
+## Características 🌟
+
+- Selección aleatoria de ganadores
+- Asignación de premios
+- Historial de sorteos
+- Compartir resultados
+- Soporte para tema claro/oscuro
+- Animaciones al anunciar ganadores
+- Persistencia de datos local
+
+## Tecnologías Utilizadas 💻
+
+- React Native
+- React Native Paper (Componentes UI)
+- AsyncStorage (Almacenamiento Local)
+- Google AdMob
+- React Navigation
+- Animaciones Lottie
+
+## Instalación 🚀
+
+1. Clona el repositorio:
+```bash
+git clone [url-del-repositorio]
+```
+
+2. Instala las dependencias:
+```bash
+npm install
+```
+
+3. Inicia el servidor de desarrollo:
+```bash
+npm start
+```
+
+4. Ejecuta en Android:
+```bash
+npm run android
+```
+
+## Estructura del Proyecto 📁
+
+```
+src/
+├── components/      # Componentes reutilizables
+├── screens/         # Pantallas de la aplicación
+├── styles/         # Estilos globales
+├── utils/          # Funciones de utilidad
+└── assets/         # Imágenes y animaciones
+```
+
+## Uso 📱
+
+1. Agrega participantes al sorteo
+2. Configura el premio (opcional)
+3. Presiona el botón de sortear
+4. ¡Comparte el resultado!
+
+## Contribuir 🤝
+
+Siéntete libre de:
+- Reportar bugs
+- Sugerir nuevas funcionalidades
+- Enviar pull requests
+
+## Licencia 📝
+
+Este proyecto es de uso libre y código abierto.
